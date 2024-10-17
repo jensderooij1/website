@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<script
-src='//eu.fw-cdn.com/10032217/26960.js'
-chat='false'>
-</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Inquiry Form</title>
+    <style>
+        /* Simple style for confirmation message */
+        #confirmationMessage {
+            display: none;
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
     <h2>Product Inquiry Form</h2>
 
-    <form action="/submit-form" method="post">
+    <form id="productForm">
         <label for="firstName">First Name:</label><br>
         <input type="text" id="firstName" name="firstName" required><br><br>
 
@@ -28,6 +32,29 @@ chat='false'>
 
         <input type="submit" value="Submit">
     </form>
+
+    <!-- Confirmation message -->
+    <p id="confirmationMessage">Thank you for your submission! We will get in touch with you soon.</p>
+
+    <!-- Your Script Integration -->
+    <script src='//eu.fw-cdn.com/10032217/26960.js' chat='false'></script>
+
+    <script>
+        // Get the form and confirmation message elements
+        const form = document.getElementById('productForm');
+        const confirmationMessage = document.getElementById('confirmationMessage');
+
+        // Add an event listener for form submission
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent actual form submission (for testing)
+
+            // Show the confirmation message
+            confirmationMessage.style.display = 'block';
+
+            // Optionally, clear the form fields after submission
+            form.reset();
+        });
+    </script>
 
 </body>
 </html>
