@@ -46,7 +46,30 @@
 
         // Add an event listener for form submission
         form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent actual form submission (for testing)
+            event.preventDefault(); // Prevent actual form submission
+
+            // Get form values
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+
+            // Populate new_contact with form data
+            var new_contact = {
+                "First name": firstName,
+                "Last name": lastName,
+                "Email": email,
+                "Alternate contact number": "98765432", // Replace with custom field if needed
+                "company": {
+                    "Name": "Example.com", // Replace with actual company name if needed
+                    "Website": "www.example.com" // Replace with actual website if needed
+                }
+            };
+
+            // Set the identifier as the email
+            var identifier = email;
+
+            // Send the data to the fwcrm system
+            fwcrm.identify(identifier, new_contact);
 
             // Show the confirmation message
             confirmationMessage.style.display = 'block';
