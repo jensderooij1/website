@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .phone-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <form id="contactForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+        <div class="form-group">
+            <label for="companyName">Company Name</label>
+            <input type="text" id="companyName" name="companyName">
+        </div>
+        <div class="phone-section">
+            <div class="form-group">
+                <label for="phone">Phone Number (Landline)</label>
+                <input type="tel" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address">
+        </div>
+        <div class="form-group">
+            <label for="postcode">Postcode</label>
+            <input type="text" id="postcode" name="postcode">
+        </div>
+        <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city">
+        </div>
+        <div class="form-group">
+            <label for="comment">Comment</label>
+            <textarea id="comment" name="comment" rows="4"></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Freshsales Script -->
+    <script src='//eu.fw-cdn.com/10032217/26960.js' chat='false'></script>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+            
+            // Get form values
+            const email = document.getElementById('email').value;
+            const firstName = document.getElementById('firstName').value;
+            const companyName = document.getElementById('companyName').value;
+            const phone = document.getElementById('phone').value;
+            const mobile = document.getElementById('mobile').value;
+            const address = document.getElementById('address').value;
+            const postcode = document.getElementById('postcode').value;
+            const city = document.getElementById('city').value;
+            const comment = document.getElementById('comment').value;
+
+            // Create contact object for Freshsales
+            const new_contact = {
+                "First name": firstName,
+                "Email": email,
+                "Phone": phone,
+                "Mobile": mobile,
+                "Address": address,
+                "City": city,
+                "Zipcode": postcode,  // Changed from postcode to Zipcode
+                "Comment": comment,
+                "company": {
+                    "Name": companyName
+                }
+            };
+
+            // Use email as identifier
+            const identifier = email;
+
+            // Send to Freshsales
+            try {
+                fwcrm.identify(identifier, new_contact);
+                alert('Contact information submitted successfully!');
+                document.getElementById('contactForm').reset();
+            } catch (error) {
+                console.error('Error submitting to Freshsales:', error);
+                alert('There was an error submitting your information. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
