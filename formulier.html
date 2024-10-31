@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .phone-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <form id="contactForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input type="text" id="lastName" name="lastName" required>
+        </div>
+        <div class="form-group">
+            <label for="companyName">Company Name</label>
+            <input type="text" id="companyName" name="companyName">
+        </div>
+        <div class="form-group">
+            <label for="companyWebsite">Company Website</label>
+            <input type="text" id="companyWebsite" name="companyWebsite">
+        </div>
+        <div class="phone-section">
+            <div class="form-group">
+                <label for="phone">Phone Number (Landline)</label>
+                <input type="tel" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address">
+        </div>
+        <div class="form-group">
+            <label for="postcode">Postcode</label>
+            <input type="text" id="postcode" name="postcode">
+        </div>
+        <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city">
+        </div>
+        <div class="form-group">
+            <label for="comment">Comment</label>
+            <textarea id="comment" name="comment" rows="4"></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+    // Freshsales Analytics Initialization
+    const freshsalesUrl = "https://gorillaservices6.myfreshworks.com/crm/sales";
+    const freshsalesKey = "ff7b3849a9f682367c5089fe6a9ccf6377978c8b8b75f510c51f636ce501fed5";
+    
+    // Simulated Freshsales Analytics class (since actual implementation details aren't provided)
+    class FreshsalesAnalytics {
+        constructor(url, key) {
+            this.url = url;
+            this.key = key;
+            console.log('Freshsales Analytics initialized');
+        }
+
+        identify(identifier, contactDetails) {
+            console.log('Identifying contact:', identifier, contactDetails);
+            // Placeholder for actual Freshsales API call
+            try {
+                // In a real-world scenario, this would make an API call to Freshsales
+                console.log('Contact identified in Freshsales');
+                return true;
+            } catch (error) {
+                console.error('Error identifying contact:', error);
+                return false;
+            }
+        }
+    }
+
+    // Create Freshsales Analytics instance
+    const freshsales = new FreshsalesAnalytics(freshsalesUrl, freshsalesKey);
+
+    function submitForm(event) {
+        event.preventDefault();
+        
+        // Collect form data
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const email = document.getElementById('email').value;
+        const companyName = document.getElementById('companyName').value;
+        const companyWebsite = document.getElementById('companyWebsite').value;
+        const mobileNumber = document.getElementById('mobile').value;
+
+        // Create contact object for Freshsales
+        const newContact = {
+            "First name": firstName,
+            "Last name": lastName,
+            "Email": email,
+            "Alternate contact number": mobileNumber,
+            "company": {
+                "Name": companyName,
+                "Website": companyWebsite
+            }
+        };
+
+        // Identify contact in Freshsales
+        try {
+            freshsales.identify(email, newContact);
+            alert('Contact information submitted successfully!');
+        } catch (error) {
+            console.error('Error submitting contact:', error);
+            alert('There was an error submitting your contact information.');
+        }
+    }
+    </script>
+</body>
+</html>
