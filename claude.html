@@ -90,30 +90,63 @@
     <script src='//eu.fw-cdn.com/10032217/26960.js' chat='false'></script>
 
     <script>
-        // Function to get UTM parameters from URL
-        function getUtmParameters() {
+        // Function to get value from URL parameters
+        function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
-            const utmParams = {
-                utm_source: urlParams.get('utm_source') || '',
-                utm_medium: urlParams.get('utm_medium') || '',
-                utm_campaign: urlParams.get('utm_campaign') || '',
-                utm_term: urlParams.get('utm_term') || '',
-                utm_content: urlParams.get('utm_content') || ''
+            return urlParams.get(param);
+        }
+
+        // Function to get all UTM values
+        function getUtmValues() {
+            const source = getQueryParam('utm_source');
+            const medium = getQueryParam('utm_medium');
+            const campaign = getQueryParam('utm_campaign');
+            const term = getQueryParam('utm_term');
+            const content = getQueryParam('utm_content');
+
+            // Create an object with all UTM values
+            const utmData = {
+                source: source || '',
+                medium: medium || '',
+                campaign: campaign || '',
+                term: term || '',
+                content: content || ''
             };
 
-            // Create a formatted string of UTM parameters
-            const utmString = Object.entries(utmParams)
+            // Store in sessionStorage for persistence
+            sessionStorage.setItem('utmParameters', JSON.stringify(utmData));
+
+            return utmData;
+        }
+
+        // Function to get UTM data either from URL or sessionStorage
+        function getUtmParameters() {
+            let utmData;
+            
+            // Try to get from sessionStorage first
+            const storedUtm = sessionStorage.getItem('utmParameters');
+            if (storedUtm) {
+                utmData = JSON.parse(storedUtm);
+            } else {
+                // If not in storage, get from URL
+                utmData = getUtmValues();
+            }
+
+            // Format UTM parameters as a string
+            const utmString = Object.entries(utmData)
                 .filter(([_, value]) => value) // Only include non-empty values
-                .map(([key, value]) => `${key}: ${value}`)
+                .map(([key, value]) => `utm_${key}: ${value}`)
                 .join(' | ');
 
+            console.log('UTM String:', utmString); // Debug log
             return utmString;
         }
 
-        // Function to get UTM parameters when the page loads
-        let utmParameters = '';
+        // Initialize UTM parameters on page load
         document.addEventListener('DOMContentLoaded', function() {
-            utmParameters = getUtmParameters();
+            // Capture UTM parameters immediately
+            getUtmValues();
+            console.log('UTM Parameters initialized:', getUtmParameters()); // Debug log
         });
 
         function submitForm(event) {
@@ -130,6 +163,10 @@
             const city = document.getElementById('city').value;
             const comment = document.getElementById('comment').value;
 
+            // Get UTM parameters at submission time
+            const utmParameters = getUtmParameters();
+            console.log('Submitting with UTM parameters:', utmParameters); // Debug log
+
             // Create contact object for Freshsales
             const new_contact = {
                 "First name": firstName,
@@ -140,11 +177,13 @@
                 "City": city,
                 "Zipcode": postcode,
                 "Comment": comment,
-                "cf_utm_parameters": utmParameters, // Add UTM parameters to custom field
+                "utm_parameters": utmParameters, // Changed from cf_utm_parameters to utm_parameters
                 "company": {
                     "Name": companyName
                 }
             };
+
+            console.log('Submitting contact:', new_contact); // Debug log
 
             // Use email as identifier
             const identifier = email;
