@@ -90,6 +90,32 @@
     <script src='//eu.fw-cdn.com/10032217/26960.js' chat='false'></script>
 
     <script>
+        // Function to get UTM parameters from URL
+        function getUtmParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const utmParams = {
+                utm_source: urlParams.get('utm_source') || '',
+                utm_medium: urlParams.get('utm_medium') || '',
+                utm_campaign: urlParams.get('utm_campaign') || '',
+                utm_term: urlParams.get('utm_term') || '',
+                utm_content: urlParams.get('utm_content') || ''
+            };
+
+            // Create a formatted string of UTM parameters
+            const utmString = Object.entries(utmParams)
+                .filter(([_, value]) => value) // Only include non-empty values
+                .map(([key, value]) => `${key}: ${value}`)
+                .join(' | ');
+
+            return utmString;
+        }
+
+        // Function to get UTM parameters when the page loads
+        let utmParameters = '';
+        document.addEventListener('DOMContentLoaded', function() {
+            utmParameters = getUtmParameters();
+        });
+
         function submitForm(event) {
             event.preventDefault();
             
@@ -112,8 +138,9 @@
                 "Mobile": mobile,
                 "Address": address,
                 "City": city,
-                "Zipcode": postcode,  // Changed from postcode to Zipcode
+                "Zipcode": postcode,
                 "Comment": comment,
+                "cf_utm_parameters": utmParameters, // Add UTM parameters to custom field
                 "company": {
                     "Name": companyName
                 }
