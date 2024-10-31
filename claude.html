@@ -89,51 +89,53 @@
     <!-- Freshsales Script -->
     <script src='//eu.fw-cdn.com/10032217/26960.js' chat='false'></script>
 
-    <script>
-        function submitForm(event) {
-            event.preventDefault();
-            
-            // Get form values
-            const email = document.getElementById('email').value;
-            const firstName = document.getElementById('firstName').value;
-            const companyName = document.getElementById('companyName').value;
-            const phone = document.getElementById('phone').value;
-            const mobile = document.getElementById('mobile').value;
-            const address = document.getElementById('address').value;
-            const postcode = document.getElementById('postcode').value;
-            const city = document.getElementById('city').value;
-            const comment = document.getElementById('comment').value;
-            const utm_parameter = document.getElementById('cf_utm_content').value = window.location.pathname;
+<!-- Updated Freshsales Script -->
+<script>
+    function submitForm(event) {
+        event.preventDefault();
+        
+        // Get form values
+        const email = document.getElementById('email').value;
+        const firstName = document.getElementById('firstName').value;
+        const companyName = document.getElementById('companyName').value;
+        const phone = document.getElementById('phone').value;
+        const mobile = document.getElementById('mobile').value;
+        const address = document.getElementById('address').value;
+        const postcode = document.getElementById('postcode').value;
+        const city = document.getElementById('city').value;
+        const comment = document.getElementById('comment').value;
+        const utm_parameter = window.location.pathname; // Corrected line to assign `utm_content`
 
-            // Create contact object for Freshsales
-            const new_contact = {
-                "First name": firstName,
-                "Email": email,
-                "Phone": phone,
-                "Mobile": mobile,
-                "Address": address,
-                "City": city,
-                "Zipcode": postcode,
-                "Comment": comment,
-                "utm_content": utm_parameter
-                "company": {
-                    "Name": companyName
-                }
-            };
-
-            // Use email as identifier
-            const identifier = email;
-
-            // Send to Freshsales
-            try {
-                fwcrm.identify(identifier, new_contact);
-                alert('Contact information submitted successfully!');
-                document.getElementById('contactForm').reset();
-            } catch (error) {
-                console.error('Error submitting to Freshsales:', error);
-                alert('There was an error submitting your information. Please try again.');
+        // Create contact object for Freshsales
+        const new_contact = {
+            "First name": firstName,
+            "Email": email,
+            "Phone": phone,
+            "Mobile": mobile,
+            "Address": address,
+            "City": city,
+            "Zipcode": postcode,
+            "Comment": comment,
+            "utm_content": utm_parameter, // Added comma here
+            "company": {
+                "Name": companyName
             }
+        };
+
+        // Use email as identifier
+        const identifier = email;
+
+        // Send to Freshsales
+        try {
+            fwcrm.identify(identifier, new_contact);
+            alert('Contact information submitted successfully!');
+            document.getElementById('contactForm').reset();
+        } catch (error) {
+            console.error('Error submitting to Freshsales:', error);
+            alert('There was an error submitting your information. Please try again.');
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
