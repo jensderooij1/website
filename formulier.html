@@ -36,11 +36,6 @@
         button:hover {
             background-color: #45a049;
         }
-        .phone-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
     </style>
 </head>
 <body>
@@ -62,18 +57,8 @@
             <input type="text" id="companyName" name="companyName">
         </div>
         <div class="form-group">
-            <label for="companyWebsite">Company Website</label>
-            <input type="text" id="companyWebsite" name="companyWebsite">
-        </div>
-        <div class="phone-section">
-            <div class="form-group">
-                <label for="phone">Phone Number (Landline)</label>
-                <input type="tel" id="phone" name="phone">
-            </div>
-            <div class="form-group">
-                <label for="mobile">Mobile Number</label>
-                <input type="tel" id="mobile" name="mobile">
-            </div>
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone">
         </div>
         <div class="form-group">
             <label for="address">Address</label>
@@ -99,7 +84,19 @@
     const freshsalesUrl = "https://gorillaservices6.myfreshworks.com/crm/sales";
     const freshsalesKey = "ff7b3849a9f682367c5089fe6a9ccf6377978c8b8b75f510c51f636ce501fed5";
     
-    // Simulated Freshsales Analytics class (since actual implementation details aren't provided)
+    // Utility function to parse URL parameters
+    function getUrlParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return {
+            utm_source: urlParams.get('utm_source') || '',
+            utm_medium: urlParams.get('utm_medium') || '',
+            utm_campaign: urlParams.get('utm_campaign') || '',
+            utm_term: urlParams.get('utm_term') || '',
+            utm_content: urlParams.get('utm_content') || ''
+        };
+    }
+
+    // Simulated Freshsales Analytics class
     class FreshsalesAnalytics {
         constructor(url, key) {
             this.url = url;
@@ -109,9 +106,7 @@
 
         identify(identifier, contactDetails) {
             console.log('Identifying contact:', identifier, contactDetails);
-            // Placeholder for actual Freshsales API call
             try {
-                // In a real-world scenario, this would make an API call to Freshsales
                 console.log('Contact identified in Freshsales');
                 return true;
             } catch (error) {
@@ -128,22 +123,36 @@
         event.preventDefault();
         
         // Collect form data
+        const email = document.getElementById('email').value;
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
-        const email = document.getElementById('email').value;
         const companyName = document.getElementById('companyName').value;
-        const companyWebsite = document.getElementById('companyWebsite').value;
-        const mobileNumber = document.getElementById('mobile').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+        const postcode = document.getElementById('postcode').value;
+        const city = document.getElementById('city').value;
+        const comment = document.getElementById('comment').value;
+
+        // Get current URL and UTM parameters
+        const currentUrl = window.location.href;
+        const utmParams = getUrlParameters();
 
         // Create contact object for Freshsales
         const newContact = {
             "First name": firstName,
             "Last name": lastName,
             "Email": email,
-            "Alternate contact number": mobileNumber,
+            "Phone": phone,
+            "Street": address,
+            "Postcode": postcode,
+            "City": city,
+            "Comment": comment,
+            "Current Page URL": currentUrl,
             "company": {
-                "Name": companyName,
-                "Website": companyWebsite
+                "Name": companyName
+            },
+            "custom_fields": {
+                "cf_utm_term": utmParams.utm_term
             }
         };
 
