@@ -103,6 +103,7 @@
             const postcode = document.getElementById('postcode').value;
             const city = document.getElementById('city').value;
             const comment = document.getElementById('comment').value;
+            const utm_parameter = document.getElementById('cf_utm_content').value = window.location.pathname;
 
             // Create contact object for Freshsales
             const new_contact = {
@@ -114,6 +115,7 @@
                 "City": city,
                 "Zipcode": postcode,
                 "Comment": comment,
+                "cf_utm_content": utm_parameter
                 "company": {
                     "Name": companyName
                 }
