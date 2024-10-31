@@ -104,7 +104,7 @@
         const postcode = document.getElementById('postcode').value;
         const city = document.getElementById('city').value;
         const comment = document.getElementById('comment').value;
-        const utm_parameter = window.location.pathname; // Corrected line to assign `utm_content`
+        const utm_parameter = window.location.href.split("/")[4]; // Corrected line to assign `utm_content`
 
         // Create contact object for Freshsales
         const new_contact = {
@@ -116,7 +116,7 @@
             "City": city,
             "Zipcode": postcode,
             "Comment": comment,
-            "Original source": utm_parameter, // Added comma here
+            "utm_content": utm_parameter, // Added comma here
             "company": {
                 "Name": companyName
             }
