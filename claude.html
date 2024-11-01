@@ -99,19 +99,19 @@
        // event.preventDefault();
         
         // Get form values
-        const email = document.getElementById('email').value;
-        const firstName = document.getElementById('firstName').value;
-        const companyName = document.getElementById('companyName').value;
-        const phone = document.getElementById('phone').value;
-        const mobile = document.getElementById('mobile').value;
-        const address = document.getElementById('address').value;
-        const postcode = document.getElementById('postcode').value;
-        const city = document.getElementById('city').value;
-        const comment = document.getElementById('comment').value;
-        const utm_parameter = window.location.href.split("/")[4]; // Corrected line to assign `utm_content`
+        var email = document.getElementById('email').value;
+        var firstName = document.getElementById('firstName').value;
+        var companyName = document.getElementById('companyName').value;
+        var phone = document.getElementById('phone').value;
+        var mobile = document.getElementById('mobile').value;
+        var address = document.getElementById('address').value;
+        var postcode = document.getElementById('postcode').value;
+        var city = document.getElementById('city').value;
+        var comment = document.getElementById('comment').value;
+        var utm_parameter = window.location.href.split("/")[4]; // Corrected line to assign `utm_content`
 
         // Create contact object for Freshsales
-        const new_contact = {
+        var new_contact = {
             "First name": firstName,
             "Email": email,
             "Phone": phone,
@@ -127,7 +127,7 @@
         };
 
         // Use email as identifier
-        const identifier = email;
+        var identifier = email;
 
         // Send to Freshsales
         try {
