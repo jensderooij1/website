@@ -1,34 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <script> function createFcn(nm){(window.freshsales)[nm]=function(){(window.freshsales).push([nm].concat(Array.prototype.slice.call(arguments,0)))}; } (function(url,appToken,formCapture){window.freshsales=window.freshsales||[];if(window.freshsales.length==0){list='init identify trackPageView trackEvent set'.split(' ');for(var i=0;i<list.length;i++){var nm=list[i];createFcn(nm);}var t=document.createElement('script');t.async=1;t.src='//euc-assets.freshsales.io/assets/analytics.js';var ft=document.getElementsByTagName('script')[0];ft.parentNode.insertBefore(t,ft);freshsales.init('https://gorillaservices6.myfreshworks.com/crm/sales','ff7b3849a9f682367c5089fe6a9ccf6377978c8b8b75f510c51f636ce501fed5',true);}})();</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Inquiry Form</title>
+    <script src='//eu.fw-cdn.com/10032217/26960.js' chat='false'></script>
 </head>
 <body>
-
-    <h2>Product Inquiry Form</h2>
-
-    <form action="/submit-form" method="post">
-        <label for="firstName">First Name:</label><br>
-        <input type="text" id="firstName" name="firstName" required><br><br>
-
-        <label for="lastName">Last Name:</label><br>
-        <input type="text" id="lastName" name="lastName" required><br><br>
-
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
-
-        <label for="product">Product:</label><br>
-        <input type="text" id="product" name="product" required><br><br>
-
-        <input type="submit" value="Submit">
-    </form>
-<script
-src='//eu.fw-cdn.com/10032217/26960.js'
-chat='false'>
-</script>
+    <button onclick="testIdentify()">Test Identify</button>
     
+    <script>
+    function testIdentify() {
+        var new_contact = {
+            "First name": "John",
+            "Last name": "Doe", 
+            "Email": "john.doe@example.com",
+            "Alternate contact number": "98765432",
+            "company": {
+                "Name": "Example.com",
+                "Website": "www.example.com"
+            }
+        };
+        
+        fwcrm.identify("john.doe@example.com", new_contact);
+        console.log("Identify called with:", new_contact);
+    }
+    </script>
 </body>
 </html>
