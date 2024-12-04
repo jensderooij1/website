@@ -95,35 +95,17 @@
 
 <!-- Updated Freshsales Script -->
 <script>
-    function submitForm(event) {
-       event.preventDefault();
-        
-        // Get form values
-        var email = document.getElementById('email').value;
-        var firstName = document.getElementById('firstName').value;
-        var companyName = document.getElementById('companyName').value;
-        var phone = document.getElementById('phone').value;
-        var mobile = document.getElementById('mobile').value;
-        var address = document.getElementById('address').value;
-        var postcode = document.getElementById('postcode').value;
-        var city = document.getElementById('city').value;
-        var comment = document.getElementById('comment').value;
-        var utm_parameter = window.location.href.split("/")[4]; // Corrected line to assign `utm_content`
 
-        // Create contact object for Freshsales
         var new_contact = {
-            "first name": firstName,
-            "Emails": email,
-            "Phone": phone,
-            "Mobile": mobile,
-            "Address": address,
-            "City": city,
-            "Zipcode": postcode,
-            "Comment": comment,
+            "first name": "Raymond",
+            "Emails": "raymond@baremans.nl",
+            "Phone": 0612345679,
+            "Mobile": 0612345676,
+            "Address": "Street 10",
+            "City": "Breda",
+            "Zipcode": "1234",
+            "Comment": "comment",
             "last name": "test", 
-            "Accounts": {
-                "Name": companyName
-            },
             "custom_field": {
               "cf_utm_content": "example"
             }
