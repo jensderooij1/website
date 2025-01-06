@@ -96,34 +96,57 @@
 <!-- Updated Freshsales Script -->
 <script> 
 
-        var new_contact = {
-            "first name": "Raymond",
-            "Emails": "raymond@baremans.nl",
-            "Phone": 0612345679,
-            "Mobile": 0612345676,
-            "Address": "Street 10",
-            "City": "Breda",
-            "Zipcode": "1234",
-            "Comment": "comment",
-            "last name": "test", 
-            "custom_field": {
-              "cf_utm_content": "example"
-            }
-        };
+document.getElementById('submitButton').addEventListener('click', function() {
+    // Prevent default form submission
+    const form = document.getElementById('contactForm');
 
-        // Use email as identifier
-        var identifier = email;
-
-        // Send to Freshsales
-        try {
-            fwcrm.identify(identifier, new_contact);
-            alert('Contact information submitted successfully!');
-            document.getElementById('contactForm').reset();
-        } catch (error) {
-            console.error('Error submitting to Freshsales:', error);
-            alert('There was an error submitting your information. Please try again.');
-        }
+    // Validate form before submission (optional)
+    if (!form.checkValidity()) {
+        alert('Please fill out all required fields.');
+        return;
     }
+
+    // Get form values
+    const email = document.getElementById('email').value;
+    const firstName = document.getElementById('firstName').value;
+    const companyName = document.getElementById('companyName').value || '';
+    const phone = document.getElementById('phone').value || '';
+    const mobile = document.getElementById('mobile').value || '';
+    const address = document.getElementById('address').value || '';
+    const postcode = document.getElementById('postcode').value || '';
+    const city = document.getElementById('city').value || '';
+    const comment = document.getElementById('comment').value || '';
+
+    // Construct the new_contact object
+    const new_contact = {
+        'first name': firstName,
+        'Emails': email,
+        'Phone': phone,
+        'Mobile': mobile,
+        'Address': address,
+        'City': city,
+        'Zipcode': postcode,
+        'Comment': comment,
+        'last name': 'Not Provided',  // Replace with an appropriate field if available
+        'custom_field': {
+            'cf_utm_content': 'example'  // Replace with dynamic data if needed
+        }
+    };
+
+    // Use email as the identifier
+    const identifier = email;
+
+    // Send to Freshsales
+    try {
+        fwcrm.identify(identifier, new_contact);
+        alert('Contact information submitted successfully!');
+        form.reset();
+    } catch (error) {
+        console.error('Error submitting to Freshsales:', error);
+        alert('There was an error submitting your information. Please try again.');
+    }
+});
+    
 </script>
 
 </body>
