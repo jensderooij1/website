@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    <script
-src='//eu.fw-cdn.com/10032217/26960.js'
-chat='false'>
-</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Form</title>
+    <script src='//eu.fw-cdn.com/10032217/26960.js' chat='false'></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -48,11 +45,9 @@ chat='false'>
     </style>
 </head>
 <body>
-    <a href="https://jensderooij1.github.io/website/claude.html?utm_source=newsletter&utm_medium=email&utm_campaign=fall_promo">
-    Visit the Claude page
-</a>
 
-    <form id="contactForm" onsubmit="submitForm(event)">
+
+    <form id="contactForm">
         <div class="form-group">
             <label for="email">Email *</label>
             <input type="email" id="email" name="email" required>
@@ -91,66 +86,61 @@ chat='false'>
             <label for="comment">Comment</label>
             <textarea id="comment" name="comment" rows="4"></textarea>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" id="submitButton">Submit</button>
     </form>
 
-    <!-- Freshsales Script -->
+    <script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        // Prevent default form submission
+        event.preventDefault();
 
-<!-- Updated Freshsales Script -->
-<script> 
-
-document.getElementById('submitButton').addEventListener('click', function() {
-    // Prevent default form submission
-    const form = document.getElementById('contactForm');
-
-    // Validate form before submission (optional)
-    if (!form.checkValidity()) {
-        alert('Please fill out all required fields.');
-        return;
-    }
-
-    // Get form values
-    const email = document.getElementById('email').value;
-    const firstName = document.getElementById('firstName').value;
-    const companyName = document.getElementById('companyName').value || '';
-    const phone = document.getElementById('phone').value || '';
-    const mobile = document.getElementById('mobile').value || '';
-    const address = document.getElementById('address').value || '';
-    const postcode = document.getElementById('postcode').value || '';
-    const city = document.getElementById('city').value || '';
-    const comment = document.getElementById('comment').value || '';
-
-    // Construct the new_contact object
-    const new_contact = {
-        'first name': firstName,
-        'Emails': email,
-        'Phone': phone,
-        'Mobile': mobile,
-        'Address': address,
-        'City': city,
-        'Zipcode': postcode,
-        'Comment': comment,
-        'last name': 'Not Provided',  // Replace with an appropriate field if available
-        'custom_field': {
-            'cf_utm_content': 'example'  // Replace with dynamic data if needed
+        // Validate form before submission
+        if (!this.checkValidity()) {
+            alert('Please fill out all required fields.');
+            return;
         }
-    };
 
-    // Use email as the identifier
-    const identifier = email;
+        // Get form values
+        const email = document.getElementById('email').value;
+        const firstName = document.getElementById('firstName').value;
+        const companyName = document.getElementById('companyName').value || '';
+        const phone = document.getElementById('phone').value || '';
+        const mobile = document.getElementById('mobile').value || '';
+        const address = document.getElementById('address').value || '';
+        const postcode = document.getElementById('postcode').value || '';
+        const city = document.getElementById('city').value || '';
+        const comment = document.getElementById('comment').value || '';
 
-    // Send to Freshsales
-    try {
-        fwcrm.identify(identifier, new_contact);
-        alert('Contact information submitted successfully!');
-        form.reset();
-    } catch (error) {
-        console.error('Error submitting to Freshsales:', error);
-        alert('There was an error submitting your information. Please try again.');
-    }
-});
-    
-</script>
+        // Construct the new_contact object
+        const new_contact = {
+            'first name': firstName,
+            'Email': email,
+            'Phone': phone,
+            'Mobile': mobile,
+            'Address': address,
+            'City': city,
+            'Zipcode': postcode,
+            'Comment': comment,
+            'last name': 'Not Provided',
+            'company': {
+                'Name': companyName
+            },
+            'User Agent': navigator.userAgent
+        };
 
+        // Use email as the identifier
+        const identifier = email;
+
+        // Send to Freshsales
+        try {
+            fwcrm.identify(identifier, new_contact);
+            alert('Contact information submitted successfully!');
+            this.reset();
+        } catch (error) {
+            console.error('Error submitting to Freshsales:', error);
+            alert('There was an error submitting your information. Please try again.');
+        }
+    });
+    </script>
 </body>
 </html>
