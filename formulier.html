@@ -3,168 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Form</title>
+    <title>Create Support Ticket</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
+            line-height: 1.6;
             padding: 20px;
+            background-color: #f5f5f5;
         }
+
+        .card {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
         }
-        input, textarea {
+
+        input, select, textarea {
             width: 100%;
             padding: 8px;
-            box-sizing: border-box;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 14px;
         }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
         button {
-            background-color: #4CAF50;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
             color: white;
-            padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
         }
-        button:hover {
-            background-color: #45a049;
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .alert {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background-color: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .ticket-details {
+            margin-top: 15px;
+        }
+
+        .ticket-details p {
+            margin-bottom: 8px;
+            color: #555;
         }
     </style>
 </head>
 <body>
-    <form id="contactForm" onsubmit="submitForm(event)">
-        <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" required>
+    <div class="card">
+        <h1 class="card-title">Create Support Ticket</h1>
+        
+        <div id="errorAlert" class="alert alert-error"></div>
+        
+        <form id="ticketForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status">
+                    <option value="2">Open</option>
+                    <option value="3">Pending</option>
+                    <option value="4">Resolved</option>
+                    <option value="5">Closed</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority">
+                    <option value="1">Low</option>
+                    <option value="2">Medium</option>
+                    <option value="3">High</option>
+                    <option value="4">Urgent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" required placeholder="Describe your issue"></textarea>
+            </div>
+
+            <button type="submit" id="submitButton">Create Ticket</button>
+        </form>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ticket Created Successfully</h2>
+            <div class="ticket-details" id="ticketDetails"></div>
+            <button onclick="closeModal()">Close</button>
         </div>
-        <div class="form-group">
-            <label for="firstName">First Name *</label>
-            <input type="text" id="firstName" name="firstName" required>
-        </div>
-        <div class="form-group">
-            <label for="lastName">Last Name *</label>
-            <input type="text" id="lastName" name="lastName" required>
-        </div>
-        <div class="form-group">
-            <label for="companyName">Company Name</label>
-            <input type="text" id="companyName" name="companyName">
-        </div>
-        <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone">
-        </div>
-        <div class="form-group">
-            <label for="address">Address</label>
-            <input type="text" id="address" name="address">
-        </div>
-        <div class="form-group">
-            <label for="postcode">Postcode</label>
-            <input type="text" id="postcode" name="postcode">
-        </div>
-        <div class="form-group">
-            <label for="city">City</label>
-            <input type="text" id="city" name="city">
-        </div>
-        <div class="form-group">
-            <label for="comment">Comment</label>
-            <textarea id="comment" name="comment" rows="4"></textarea>
-        </div>
-        <button type="submit">Submit</button>
-    </form>
+    </div>
 
     <script>
-    // Freshsales Analytics Initialization
-    const freshsalesUrl = "https://gorillaservices6.myfreshworks.com/crm/sales";
-    const freshsalesKey = "ff7b3849a9f682367c5089fe6a9ccf6377978c8b8b75f510c51f636ce501fed5";
-    
-    // Utility function to parse URL parameters
-    function getUrlParameters() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return {
-            utm_source: urlParams.get('utm_source') || '',
-            utm_medium: urlParams.get('utm_medium') || '',
-            utm_campaign: urlParams.get('utm_campaign') || '',
-            utm_term: urlParams.get('utm_term') || '',
-            utm_content: urlParams.get('utm_content') || ''
-        };
-    }
+        const form = document.getElementById('ticketForm');
+        const submitButton = document.getElementById('submitButton');
+        const errorAlert = document.getElementById('errorAlert');
+        const modal = document.getElementById('successModal');
+        const closeBtn = document.querySelector('.close');
 
-    // Simulated Freshsales Analytics class
-    class FreshsalesAnalytics {
-        constructor(url, key) {
-            this.url = url;
-            this.key = key;
-            console.log('Freshsales Analytics initialized');
+        function showError(message) {
+            errorAlert.style.display = 'block';
+            errorAlert.textContent = message;
         }
 
-        identify(identifier, contactDetails) {
-            console.log('Identifying contact:', identifier, contactDetails);
+        function hideError() {
+            errorAlert.style.display = 'none';
+        }
+
+        function showSuccessModal(ticketData) {
+            const details = document.getElementById('ticketDetails');
+            details.innerHTML = `
+                <p><strong>Ticket ID:</strong> #${ticketData.id}</p>
+                <p><strong>Subject:</strong> ${ticketData.subject || 'N/A'}</p>
+                <p><strong>Status:</strong> ${document.getElementById('status').selectedOptions[0].text}</p>
+                <p><strong>Priority:</strong> ${document.getElementById('priority').selectedOptions[0].text}</p>
+            `;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        closeBtn.onclick = closeModal;
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+            submitButton.disabled = true;
+            submitButton.textContent = 'Creating Ticket...';
+
             try {
-                console.log('Contact identified in Freshsales');
-                return true;
+                const response = await fetch('https://gorillaservicesomnidemo.freshdesk.com/api/v2/tickets', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + btoa('T0KFbHAI5Pj56F5V92:X')
+                    },
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        status: parseInt(document.getElementById('status').value),
+                        priority: parseInt(document.getElementById('priority').value),
+                        description: document.getElementById('description').value
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create ticket');
+                }
+
+                const ticketData = await response.json();
+                showSuccessModal(ticketData);
+                form.reset();
             } catch (error) {
-                console.error('Error identifying contact:', error);
-                return false;
+                showError('Failed to create ticket. Please try again.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Create Ticket';
             }
-        }
-    }
-
-    // Create Freshsales Analytics instance
-    const freshsales = new FreshsalesAnalytics(freshsalesUrl, freshsalesKey);
-
-    function submitForm(event) {
-        event.preventDefault();
-        
-        // Collect form data
-        const email = document.getElementById('email').value;
-        const firstName = document.getElementById('firstName').value;
-        const lastName = document.getElementById('lastName').value;
-        const companyName = document.getElementById('companyName').value;
-        const phone = document.getElementById('phone').value;
-        const address = document.getElementById('address').value;
-        const postcode = document.getElementById('postcode').value;
-        const city = document.getElementById('city').value;
-        const comment = document.getElementById('comment').value;
-
-        // Get current URL and UTM parameters
-        const currentUrl = window.location.href;
-        const utmParams = getUrlParameters();
-
-        // Create contact object for Freshsales
-        const newContact = {
-            "First name": firstName,
-            "Last name": lastName,
-            "Email": email,
-            "Phone": phone,
-            "Street": address,
-            "Postcode": postcode,
-            "City": city,
-            "Comment": comment,
-            "Current Page URL": currentUrl,
-            "company": {
-                "Name": companyName
-            },
-            "custom_fields": {
-                "cf_utm_term": utmParams.utm_term
-            }
-        };
-
-        // Identify contact in Freshsales
-        try {
-            freshsales.identify(email, newContact);
-            alert('Contact information submitted successfully!');
-        } catch (error) {
-            console.error('Error submitting contact:', error);
-            alert('There was an error submitting your contact information.');
-        }
-    }
+        });
     </script>
 </body>
 </html>
