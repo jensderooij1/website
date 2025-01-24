@@ -106,7 +106,6 @@
         const email = document.getElementById('email').value;
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
-        const companyName = document.getElementById('companyName').value || '';
         const phone = document.getElementById('phone').value || '';
         const mobile = document.getElementById('mobile').value || '';
         const address = document.getElementById('address').value || '';
@@ -114,29 +113,26 @@
         const city = document.getElementById('city').value || '';
         const comment = document.getElementById('comment').value || '';
 
-        // Construct the new_contact object with corrected field names
+        // Construct the new_contact object
         const new_contact = {
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone,
-            mobile: mobile,
-            address: address,
-            city: city,
-            zipcode: postcode,
-            comment: comment,
-            company: {
-                name: companyName
-            },
-            'User Agent': navigator.userAgent
+            contact: {
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                mobile_number: mobile,
+                work_number: phone,
+                address: address,
+                zipcode: postcode,
+                city: city,
+                custom_field: {
+                    cf_comment: comment
+                }
+            }
         };
-
-        // Use email as the identifier
-        const identifier = email;
 
         // Send to Freshsales
         try {
-            fwcrm.identify(identifier, new_contact);
+            fwcrm.identify(email, new_contact);
             alert('Contact information submitted successfully!');
             this.reset();
         } catch (error) {
