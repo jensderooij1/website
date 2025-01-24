@@ -110,6 +110,7 @@
         const postcode = document.getElementById('postcode').value || '';
         const city = document.getElementById('city').value || '';
         const comment = document.getElementById('comment').value || '';
+        const lastname = document.getElementById('lastname').value || '';
 
         // Construct the new_contact object
         const new_contact = {
@@ -121,7 +122,7 @@
             'City': city,
             'Zipcode': postcode,
             'Comment': comment,
-            'last name': 'Not Provided',
+            'last name': lastname,
             'company': {
                 'Name': companyName
             },
