@@ -114,10 +114,10 @@
         const city = document.getElementById('city').value || '';
         const comment = document.getElementById('comment').value || '';
 
-        // Construct the new_contact object
+        // Construct the new_contact object with corrected field names
         const new_contact = {
-            'first name': firstName,
-            'last name': lastName,
+            'First Name': firstName,
+            'Last Name': lastName,
             'Email': email,
             'Phone': phone,
             'Mobile': mobile,
@@ -125,7 +125,7 @@
             'City': city,
             'Zipcode': postcode,
             'Comment': comment,
-            'company': {
+            'Company': {
                 'Name': companyName
             },
             'User Agent': navigator.userAgent
