@@ -17,29 +17,21 @@
             display: block;
             margin-bottom: 5px;
         }
-        .form-group input, .form-group select {
+        .form-group input {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
         }
-        .phone-input-group {
-            display: flex;
-            gap: 10px;
-        }
-        .country-select {
-            width: 110px;
-            flex-shrink: 0;
-        }
-        .phone-input {
-            flex-grow: 1;
-            min-width: 200px; /* Added minimum width */
-        }
         .form-hint {
             font-size: 12px;
             color: #666;
             margin-top: 4px;
+        }
+        .example {
+            font-style: italic;
+            color: #888;
         }
         .btn {
             background-color: #007bff;
@@ -87,27 +79,11 @@
                 <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="phone">Phone Number:</label>
-                <div class="phone-input-group">
-                    <select id="countryCode" class="country-select" required>
-                        <option value="">Country</option>
-                        <option value="+31">NL (+31)</option>
-                        <option value="+32">BE (+32)</option>
-                        <option value="+49">DE (+49)</option>
-                        <option value="+33">FR (+33)</option>
-                        <option value="+44">UK (+44)</option>
-                        <option value="+34">ES (+34)</option>
-                        <option value="+39">IT (+39)</option>
-                        <option value="+351">PT (+351)</option>
-                        <option value="+45">DK (+45)</option>
-                        <option value="+46">SE (+46)</option>
-                        <option value="+47">NO (+47)</option>
-                        <option value="+358">FI (+358)</option>
-                    </select>
-                    <input type="tel" id="phone" name="phone" class="phone-input" placeholder="612345678" required>
-                </div>
+                <label for="phone">Phone Number (with country code):</label>
+                <input type="tel" id="phone" name="phone" pattern="^\+[1-9]\d{1,14}$" placeholder="+31612345678" required>
                 <div class="form-hint">
-                    Please select your country code and enter your phone number without leading zeros
+                    Please include your country code (e.g., +31 for Netherlands, +32 for Belgium, +49 for Germany)
+                    <div class="example">Example: +31612345678</div>
                 </div>
             </div>
             <button type="submit" class="btn" id="submitBtn">
@@ -133,17 +109,13 @@
             const errorAlert = document.getElementById('errorAlert');
             const nameInput = document.getElementById('name');
             const phoneInput = document.getElementById('phone');
-            const countryCodeSelect = document.getElementById('countryCode');
 
-            // Validate country code selection
-            if (!countryCodeSelect.value) {
-                errorAlert.textContent = 'Please select a country code';
+            // Validate phone number format
+            if (!phoneInput.value.startsWith('+')) {
+                errorAlert.textContent = 'Please include your country code starting with +';
                 errorAlert.style.display = 'block';
                 return;
             }
-
-            // Combine country code and phone number
-            const fullPhoneNumber = countryCodeSelect.value + phoneInput.value.replace(/^0+/, '');
 
             // Reset alerts
             successAlert.style.display = 'none';
@@ -164,7 +136,7 @@
                         description: `Callback request from ${nameInput.value}`,
                         subject: "Callback Request",
                         name: nameInput.value,
-                        phone: fullPhoneNumber,
+                        phone: phoneInput.value,
                         priority: 1,
                         type: "Lead",
                         source: 100,
@@ -189,7 +161,6 @@
                 successAlert.style.display = 'block';
                 nameInput.value = '';
                 phoneInput.value = '';
-                countryCodeSelect.value = '';
 
                 // Hide success message after 3 seconds
                 setTimeout(() => {
@@ -205,12 +176,6 @@
                 submitBtn.disabled = false;
                 loading.style.display = 'none';
             }
-        });
-
-        // Remove leading zeros when typing phone number
-        document.getElementById('phone').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/^0+/, '');
-            e.target.value = value;
         });
     </script>
 </body>
