@@ -37,19 +37,10 @@
         button:hover {
             background-color: #45a049;
         }
-        .phone-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
     </style>
 </head>
 <body>
     <form id="contactForm">
-        <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" required>
-        </div>
         <div class="form-group">
             <label for="firstName">First Name *</label>
             <input type="text" id="firstName" name="firstName" required>
@@ -59,79 +50,61 @@
             <input type="text" id="lastName" name="lastName" required>
         </div>
         <div class="form-group">
-            <label for="companyName">Company Name</label>
-            <input type="text" id="companyName" name="companyName">
-        </div>
-        <div class="phone-section">
-            <div class="form-group">
-                <label for="phone">Phone Number (Landline)</label>
-                <input type="tel" id="phone" name="phone">
-            </div>
-            <div class="form-group">
-                <label for="mobile">Mobile Number</label>
-                <input type="tel" id="mobile" name="mobile">
-            </div>
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required>
         </div>
         <div class="form-group">
-            <label for="address">Address</label>
-            <input type="text" id="address" name="address">
-        </div>
-        <div class="form-group">
-            <label for="postcode">Postcode</label>
-            <input type="text" id="postcode" name="postcode">
-        </div>
-        <div class="form-group">
-            <label for="city">City</label>
-            <input type="text" id="city" name="city">
+            <label for="mobile">Mobile Number *</label>
+            <input type="tel" id="mobile" name="mobile" required>
         </div>
         <div class="form-group">
             <label for="comment">Comment</label>
             <textarea id="comment" name="comment" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="companyName">Company Name</label>
+            <input type="text" id="companyName" name="companyName">
+        </div>
+        <div class="form-group">
+            <label for="companyWebsite">Company Website</label>
+            <input type="text" id="companyWebsite" name="companyWebsite">
         </div>
         <button type="submit" id="submitButton">Submit</button>
     </form>
 
     <script>
     document.getElementById('contactForm').addEventListener('submit', function(event) {
-        // Prevent default form submission
         event.preventDefault();
 
-        // Validate form before submission
         if (!this.checkValidity()) {
             alert('Please fill out all required fields.');
             return;
         }
 
-        // Get form values
-        const email = document.getElementById('email').value;
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
-        const phone = document.getElementById('phone').value || '';
-        const mobile = document.getElementById('mobile').value || '';
-        const address = document.getElementById('address').value || '';
-        const postcode = document.getElementById('postcode').value || '';
-        const city = document.getElementById('city').value || '';
+        const email = document.getElementById('email').value;
+        const mobile = document.getElementById('mobile').value;
         const comment = document.getElementById('comment').value || '';
+        const companyName = document.getElementById('companyName').value || '';
+        const companyWebsite = document.getElementById('companyWebsite').value || '';
 
-        // Construct the new_contact object
         const new_contact = {
-            contact: {
-                "Voornaam": firstName,
-                "Achternaam": lastName,
-                "Email": email,
-                "mobiel": mobile,
-                "Address": address,
-                "Zipcode": postcode,
-                "City": city,
-                custom_field: {
-                    cf_comment: comment
-                }
+            "First name": firstName,
+            "Last name": lastName,
+            "Emails": email,
+            "Mobile": mobile,
+            "Comment": comment,
+            "company": {
+                "Name": companyName,
+                "Website": companyWebsite
             }
         };
 
-        // Send to Freshsales
+        const identifier = email;
+
         try {
-            fwcrm.identify(email, new_contact);
+            fwcrm.identify(identifier, new_contact);
             alert('Contact information submitted successfully!');
             this.reset();
         } catch (error) {
