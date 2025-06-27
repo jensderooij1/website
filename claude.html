@@ -3,21 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Direct API Test Form</title>
+    <title>Contact Form</title>
+    <script src='//eu.fw-cdn.com/10032217/26960.js' chat='false'></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 600px;
             margin: 20px auto;
             padding: 20px;
-        }
-        .warning {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border: 1px solid #ffeaa7;
         }
         .form-group {
             margin-bottom: 15px;
@@ -83,12 +76,7 @@
     </style>
 </head>
 <body>
-    <div class="warning">
-        <strong>⚠️ WARNING:</strong> This is for testing only! The API key is exposed in the browser. 
-        Do NOT use this in production. Use a server-side middleware instead.
-    </div>
-    
-    <h1>Direct API Test Form</h1>
+    <h1>Contact Form Test</h1>
     <form id="contactForm">
         <div class="form-group">
             <label for="firstName">First Name *</label>
@@ -151,7 +139,7 @@
     </form>
     
     <div id="successMessage" class="success-message">
-        Contact submitted successfully to Freshworks CRM!
+        Contact submitted successfully!
     </div>
     <div id="errorMessage" class="error-message">
         There was an error submitting your contact. Please try again.
@@ -173,51 +161,37 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Submitting...';
             
-            // Build the contact data structure
-            const contactData = {
-                contact: {
-                    first_name: document.getElementById('firstName').value,
-                    last_name: document.getElementById('lastName').value,
-                    email: document.getElementById('email').value,
-                    work_number: document.getElementById('mobile').value,
-                    address: document.getElementById('address').value,
-                    city: document.getElementById('city').value,
-                    zipcode: document.getElementById('zipcode').value,
-                    company_name: document.getElementById('companyName').value,
-                    custom_field: {
-                        cf_comment: document.getElementById('comment').value,
-                        cf_send_me_more_information: document.getElementById('sendInfo').checked,
-                        cf_i_have_further_questions_please_contact_me: document.getElementById('contactMe').checked,
-                        cf_i_would_like_an_online_demo: document.getElementById('onlineDemo').checked,
-                        cf_send_me_a_quote: document.getElementById('sendQuote').checked
-                    }
-                }
-            };
+            // Collect form data
+            const formData = new FormData();
+            formData.append('first_name', document.getElementById('firstName').value);
+            formData.append('last_name', document.getElementById('lastName').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('work_number', document.getElementById('mobile').value);
+            formData.append('address', document.getElementById('address').value);
+            formData.append('city', document.getElementById('city').value);
+            formData.append('zipcode', document.getElementById('zipcode').value);
+            formData.append('company_name', document.getElementById('companyName').value);
+            formData.append('cf_comment', document.getElementById('comment').value);
             
-            // Remove empty fields
-            Object.keys(contactData.contact).forEach(key => {
-                if (key !== 'custom_field' && !contactData.contact[key]) {
-                    delete contactData.contact[key];
-                }
-            });
+            // Add checkbox values
+            formData.append('cf_send_me_more_information', document.getElementById('sendInfo').checked ? 'true' : 'false');
+            formData.append('cf_i_have_further_questions_please_contact_me', document.getElementById('contactMe').checked ? 'true' : 'false');
+            formData.append('cf_i_would_like_an_online_demo', document.getElementById('onlineDemo').checked ? 'true' : 'false');
+            formData.append('cf_send_me_a_quote', document.getElementById('sendQuote').checked ? 'true' : 'false');
             
-            // Direct API call to Freshworks (TESTING ONLY!)
-            fetch('https://fresh-agrovision.myfreshworks.com/crm/sales/api/contacts', {
+            // IMPORTANT: Replace this URL with your actual middleware URL
+            const middlewareUrl = 'https://yoursite.com/webhook-middleware.php';
+            
+            // Submit to middleware
+            fetch(middlewareUrl, {
                 method: 'POST',
-                headers: {
-                    'Authorization': 'Token token=XGOvUHqLSwS9z2ugWD0ekQ',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(contactData)
+                body: formData
             })
             .then(response => {
-                console.log('Response status:', response.status);
                 if (response.ok) {
-                    return response.json();
+                    return response.text();
                 } else {
-                    return response.text().then(text => {
-                        throw new Error(`HTTP ${response.status}: ${text}`);
-                    });
+                    throw new Error('Network response was not ok');
                 }
             })
             .then(data => {
@@ -228,7 +202,6 @@
             .catch(error => {
                 console.error('Error:', error);
                 errorMessage.style.display = 'block';
-                errorMessage.textContent = 'Error: ' + error.message;
             })
             .finally(() => {
                 // Re-enable submit button
