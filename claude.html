@@ -72,46 +72,6 @@
         <button type="submit" id="submitButton">Submit</button>
     </form>
 
-    <script>
-    document.getElementById('contactForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        if (!this.checkValidity()) {
-            alert('Please fill out all required fields.');
-            return;
-        }
-
-        const firstName = document.getElementById('firstName').value;
-        const lastName = document.getElementById('lastName').value;
-        const email = document.getElementById('email').value;
-        const mobile = document.getElementById('mobile').value;
-        const comment = document.getElementById('comment').value || '';
-        const companyName = document.getElementById('companyName').value || '';
-        const companyWebsite = document.getElementById('companyWebsite').value || '';
-
-        const new_contact = {
-            "First name": firstName,
-            "Last name": lastName,
-            "Emails": email,
-            "Mobile": mobile,
-            "Comment": comment,
-            "company": {
-                "Name": companyName,
-                "Website": companyWebsite
-            }
-        };
-
-        const identifier = email;
-
-        try {
-            fwcrm.identify(identifier, new_contact);
-            alert('Contact information submitted successfully!');
-            this.reset();
-        } catch (error) {
-            console.error('Error submitting to Freshsales:', error);
-            alert('There was an error submitting your information. Please try again.');
-        }
-    });
-    </script>
+  
 </body>
 </html>
