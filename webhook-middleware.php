@@ -1,9 +1,14 @@
 <?php
 /**
- * Webhook Middleware for Gravity Forms to Freshworks CRM
+ * Webhook Middleware for Contact Form to Freshworks CRM
  * Save this as webhook-middleware.php on your server
- * Point your Gravity Forms webhook to: https://yoursite.com/webhook-middleware.php
+ * Point your form submission to: https://yoursite.com/webhook-middleware.php
  */
+
+// Enable CORS for testing (remove in production if not needed)
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
 
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -11,14 +16,23 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit('Method Not Allowed');
 }
 
-// Get the webhook data from Gravity Forms
-$input = file_get_contents('php://input');
-parse_str($input, $webhook_data);
+// Get the webhook data from the form
+$webhook_data = array();
 
-// Alternative if data comes as JSON
-if (empty($webhook_data)) {
+// Check if data is coming as form data or JSON
+$content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+
+if (strpos($content_type, 'application/json') !== false) {
+    // JSON data
+    $input = file_get_contents('php://input');
     $webhook_data = json_decode($input, true);
+} else {
+    // Form data (FormData or URL-encoded)
+    $webhook_data = $_POST;
 }
+
+// Log received data for debugging
+error_log('Received webhook data: ' . print_r($webhook_data, true));
 
 // Map flat webhook data to nested Freshworks structure
 $contact_data = array(
