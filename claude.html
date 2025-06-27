@@ -37,9 +37,46 @@
         button:hover {
             background-color: #45a049;
         }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .checkbox-group {
+            margin: 10px 0;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        .checkbox-group label {
+            display: inline;
+            margin-bottom: 0;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+            display: none;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+            display: none;
+        }
+        .address-group {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
+    <h1>Contact Form Test</h1>
     <form id="contactForm">
         <div class="form-group">
             <label for="firstName">First Name *</label>
@@ -54,24 +91,124 @@
             <input type="email" id="email" name="email" required>
         </div>
         <div class="form-group">
-            <label for="mobile">Mobile Number *</label>
+            <label for="mobile">Work Number *</label>
             <input type="tel" id="mobile" name="mobile" required>
         </div>
         <div class="form-group">
-            <label for="comment">Comment</label>
-            <textarea id="comment" name="comment" rows="4"></textarea>
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" placeholder="Street address">
+        </div>
+        <div class="address-group">
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city">
+            </div>
+            <div class="form-group">
+                <label for="zipcode">Zip Code</label>
+                <input type="text" id="zipcode" name="zipcode">
+            </div>
         </div>
         <div class="form-group">
             <label for="companyName">Company Name</label>
             <input type="text" id="companyName" name="companyName">
         </div>
         <div class="form-group">
-            <label for="companyWebsite">Company Website</label>
-            <input type="text" id="companyWebsite" name="companyWebsite">
+            <label for="comment">Comment</label>
+            <textarea id="comment" name="comment" rows="4"></textarea>
         </div>
+        
+        <h3>Additional Options:</h3>
+        <div class="checkbox-group">
+            <input type="checkbox" id="sendInfo" name="sendInfo">
+            <label for="sendInfo">Send me more information</label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="contactMe" name="contactMe">
+            <label for="contactMe">I have further questions, please contact me</label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="onlineDemo" name="onlineDemo">
+            <label for="onlineDemo">I would like an online demo</label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="sendQuote" name="sendQuote">
+            <label for="sendQuote">Send me a quote</label>
+        </div>
+        
         <button type="submit" id="submitButton">Submit</button>
     </form>
+    
+    <div id="successMessage" class="success-message">
+        Contact submitted successfully!
+    </div>
+    <div id="errorMessage" class="error-message">
+        There was an error submitting your contact. Please try again.
+    </div>
 
-  
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = document.getElementById('submitButton');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Disable submit button
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            
+            // Collect form data
+            const formData = new FormData();
+            formData.append('first_name', document.getElementById('firstName').value);
+            formData.append('last_name', document.getElementById('lastName').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('work_number', document.getElementById('mobile').value);
+            formData.append('address', document.getElementById('address').value);
+            formData.append('city', document.getElementById('city').value);
+            formData.append('zipcode', document.getElementById('zipcode').value);
+            formData.append('company_name', document.getElementById('companyName').value);
+            formData.append('cf_comment', document.getElementById('comment').value);
+            
+            // Add checkbox values
+            formData.append('cf_send_me_more_information', document.getElementById('sendInfo').checked ? 'true' : 'false');
+            formData.append('cf_i_have_further_questions_please_contact_me', document.getElementById('contactMe').checked ? 'true' : 'false');
+            formData.append('cf_i_would_like_an_online_demo', document.getElementById('onlineDemo').checked ? 'true' : 'false');
+            formData.append('cf_send_me_a_quote', document.getElementById('sendQuote').checked ? 'true' : 'false');
+            
+            // IMPORTANT: Replace this URL with your actual middleware URL
+            const middlewareUrl = 'https://jensderooij1.github.io/website/webhook-middleware.php';
+            
+            // Submit to middleware
+            fetch(middlewareUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                console.log('Success:', data);
+                successMessage.style.display = 'block';
+                document.getElementById('contactForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorMessage.style.display = 'block';
+            })
+            .finally(() => {
+                // Re-enable submit button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit';
+            });
+        });
+    </script>
 </body>
 </html>
